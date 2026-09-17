@@ -46,7 +46,15 @@ npm run build   # passes tsc strict + vite production build
 
 - Program ID: `4H4HkWERVP3TsVYqSKcUcrdg8tCGeYaV7wj9WjMsjspD` (generated keypair; swap via `solana-keygen` + `anchor keys sync` for mainnet)
 - Source: [`programs/solana_stealth_shield/src/lib.rs`](programs/solana_stealth_shield/src/lib.rs)
-- Compiles clean with `anchor build` (anchor-lang 0.30.1, anchor-spl with `token_2022` feature).
+- Compiles clean with `cargo build-sbf` (agave 4.x toolchain; anchor-lang 0.30.1, anchor-spl with `token_2022` feature).
+- **Runs on-chain, verified.** Deployed to a `solana-test-validator` (Program Id above) and exercised end-to-end: `register_meta_key` creates the `stealth-meta` PDA and persists owner + spending/viewing keys + timestamp. Re-run it with:
+  ```bash
+  solana-test-validator --reset          # terminal 1
+  cargo build-sbf -p solana_stealth_shield
+  solana program deploy target/deploy/solana_stealth_shield.so
+  npm i @solana/web3.js && node tools/verify-onchain.mjs   # terminal 2
+  ```
+- `.github/workflows/deploy-devnet.yml` deploys the same binary to Solana devnet on demand (needs a funded devnet keypair; see `SOLANA_DEPLOY_KEY` secret).
 
 ## 🔬 Security Model
 
