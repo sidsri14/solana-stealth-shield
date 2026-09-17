@@ -1,0 +1,58 @@
+name: Deploy StealthShield to Devnet
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-devnet
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Solana CLI 2.1.21
+        run: |
+          set -euxo pipefail
+          curl -sSfL --retry 5 -o /tmp/solana.tar.bz2 \
+            https://github.com/anza-xyz/agave/releases/download/v2.1.21/solana-release-x86_64-unknown-linux-gnu.tar.bz2
+          mkdir -p /tmp/solana
+          tar -xjf /tmp/solana.tar.bz2 -C /tmp/solana
+          echo "PATH=/tmp/solana/solana-release/bin:$PATH" >> "$GITHUB_ENV"
+          solana --version
+
+      - name: Recover deploy keypair
+        env:
+          DEPLOY_KEY_B64: ${{ secrets.SOLANA_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.config/solana
+          echo "$DEPLOY_KEY_B64" | base64 -d > ~/.config/solana/id.json
+          chmod 600 ~/.config/solana/id.json
+          solana-keygen verify -f ~/.config/solana/id.json
+
+      - name: Airdrop devnet SOL (with retries)
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 20); do
+            if solana airdrop 5 --url https://api.devnet.solana.com; then exit 0; fi
+            echo "airdrop attempt $i failed, retrying..."
+            sleep 5
+          done
+          exit 1
+
+      - name: Build program (SBF)
+        run: cargo build-sbf --manifest-path programs/solana_stealth_shield/Cargo.toml
+
+      - name: Deploy to devnet
+        id: deploy
+        run: |
+          set -euo pipefail
+          out=$(solana program deploy target/deploy/solana_stealth_shield.so --url https://api.devnet.solana.com 2>&1)
+          echo "$out"
+          id=$(echo "$out" | sed -n 's/.*Program Id: \([A-Za-z0-9]*\).*/\1/p')
+          test -n "$id" || { echo "could not parse program id from output"; exit 1; }
+          echo "program_id=$id" >> "$GITHUB_OUTPUT"
+          echo "DISPATCH_PROGRAM_ID=$id" >> "$GITHUB_ENV"
