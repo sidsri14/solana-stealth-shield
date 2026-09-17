@@ -13,17 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Solana CLI 2.1.21
+- name: Install Solana CLI 4.2.2
         run: |
           set -euxo pipefail
           curl -sSfL --retry 5 -o /tmp/solana.tar.bz2 \
-            https://github.com/anza-xyz/agave/releases/download/v2.1.21/solana-release-x86_64-unknown-linux-gnu.tar.bz2
+            https://github.com/anza-xyz/agave/releases/download/v4.2.2/solana-release-x86_64-unknown-linux-gnu.tar.bz2
           mkdir -p /tmp/solana
           tar -xjf /tmp/solana.tar.bz2 -C /tmp/solana
           echo "PATH=/tmp/solana/solana-release/bin:$PATH" >> "$GITHUB_ENV"
-
-      - name: Verify Solana CLI
-        run: solana --version
 
       - name: Recover deploy keypair
         env:
@@ -38,10 +35,10 @@ jobs:
       - name: Airdrop devnet SOL (with retries)
         run: |
           set -euo pipefail
-          for i in $(seq 1 20); do
-            if solana airdrop 5 --url https://api.devnet.solana.com; then exit 0; fi
+          for i in $(seq 1 30); do
+            if solana airdrop 2 --url https://api.devnet.solana.com; then exit 0; fi
             echo "airdrop attempt $i failed, retrying..."
-            sleep 5
+            sleep 10
           done
           exit 1
 
