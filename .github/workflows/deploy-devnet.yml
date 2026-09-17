@@ -21,7 +21,9 @@ jobs:
           mkdir -p /tmp/solana
           tar -xjf /tmp/solana.tar.bz2 -C /tmp/solana
           echo "PATH=/tmp/solana/solana-release/bin:$PATH" >> "$GITHUB_ENV"
-          solana --version
+
+      - name: Verify Solana CLI
+        run: solana --version
 
       - name: Recover deploy keypair
         env:
