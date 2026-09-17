@@ -1,6 +1,8 @@
 export interface StealthMetaKey {
   spendingPubkey: string;
+  spendingPrivkey: string;
   viewingPubkey: string;
+  viewingPrivkey: string;
   formattedMetaAddress: string;
 }
 

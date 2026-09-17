@@ -1,0 +1,12 @@
+[programs.localnet]
+solana_stealth_shield = "Az6Y2K5xzSqAW4tZBPjkB9Nu2FLtWAHpeWo9cbYdYPmD"
+
+[provider]
+cluster = "Localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json tests/**/*.ts"
+
+[registry]
+url = "https://api.apr.dev"

@@ -20,7 +20,7 @@ const PRIVACY_CHART_DATA = [
 export default function App() {
   const [activeTab, setActiveTab] = useState<'send' | 'scan' | 'pools' | 'contract'>('send');
   const [userMetaKey, setUserMetaKey] = useState<StealthMetaKey>(generateMetaStealthKeypair());
-  const [recipientMeta, setRecipientMeta] = useState(userMetaKey.formattedMetaAddress);
+  const [receiverMeta, setReceiverMeta] = useState<StealthMetaKey>(generateMetaStealthKeypair());
   const [sendAmount, setSendAmount] = useState<number>(5.0);
   const [sendToken, setSendToken] = useState<'SOL' | 'USDC' | 'sUSD'>('SOL');
   const [isSending, setIsSending] = useState(false);
@@ -57,15 +57,17 @@ export default function App() {
   const [copiedMeta, setCopiedMeta] = useState(false);
 
   const handleGenerateNewKey = () => {
-    const k = generateMetaStealthKeypair();
-    setUserMetaKey(k);
-    setRecipientMeta(k.formattedMetaAddress);
+    setUserMetaKey(generateMetaStealthKeypair());
+  };
+
+  const handleGenerateRecipient = () => {
+    setReceiverMeta(generateMetaStealthKeypair());
   };
 
   const handleSendStealthPayment = async () => {
     setIsSending(true);
     await new Promise(r => setTimeout(r, 900));
-    const p = deriveStealthAddress(recipientMeta, sendAmount, sendToken);
+    const p = deriveStealthAddress(receiverMeta, sendAmount, sendToken);
     setLastPayment(p);
     setScannedPayments(prev => [p, ...prev]);
     setIsSending(false);
@@ -216,12 +218,21 @@ export default function App() {
               <div className="space-y-4">
                 <div>
                   <label className="text-[10px] font-bold text-zinc-400 font-mono uppercase block mb-1.5">Recipient Meta-Stealth Address</label>
-                  <input
-                    type="text"
-                    value={recipientMeta}
-                    onChange={e => setRecipientMeta(e.target.value)}
-                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:border-emerald-500 outline-none"
-                  />
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={receiverMeta.formattedMetaAddress}
+                      readOnly
+                      className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-3 py-2.5 text-xs text-white font-mono focus:border-emerald-500 outline-none"
+                    />
+                    <button
+                      onClick={handleGenerateRecipient}
+                      className="shrink-0 bg-zinc-900 hover:bg-emerald-900/40 border border-zinc-700 rounded-xl px-3 text-xs text-emerald-300 transition-colors"
+                      title="Generate new recipient stealth keypair"
+                    >
+                      New
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
