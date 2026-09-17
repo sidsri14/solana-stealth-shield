@@ -1,5 +1,5 @@
 [programs.localnet]
-solana_stealth_shield = "Az6Y2K5xzSqAW4tZBPjkB9Nu2FLtWAHpeWo9cbYdYPmD"
+solana_stealth_shield = "4H4HkWERVP3TsVYqSKcUcrdg8tCGeYaV7wj9WjMsjspD"
 
 [provider]
 cluster = "Localnet"

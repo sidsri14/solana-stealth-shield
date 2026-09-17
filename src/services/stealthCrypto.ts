@@ -174,7 +174,7 @@ export type { StealthMetaKey };
 export const ANCHOR_STEALTH_CONTRACT = `use anchor_lang::prelude::*;
 use anchor_spl::token_interface::{Mint, TokenAccount, TokenInterface, TransferChecked, transfer_checked};
 
-declare_id!("Az6Y2K5xzSqAW4tZBPjkB9Nu2FLtWAHpeWo9cbYdYPmD");
+declare_id!("4H4HkWERVP3TsVYqSKcUcrdg8tCGeYaV7wj9WjMsjspD");
 
 #[program]
 pub mod solana_stealth_shield {

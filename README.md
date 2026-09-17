@@ -44,7 +44,7 @@ npm run build   # passes tsc strict + vite production build
 
 ## 📜 On-chain Program
 
-- Program ID: `Az6Y2K5xzSqAW4tZBPjkB9Nu2FLtWAHpeWo9cbYdYPmD` (generated keypair; swap via `solana-keygen` + `anchor keys sync` for mainnet)
+- Program ID: `4H4HkWERVP3TsVYqSKcUcrdg8tCGeYaV7wj9WjMsjspD` (generated keypair; swap via `solana-keygen` + `anchor keys sync` for mainnet)
 - Source: [`programs/solana_stealth_shield/src/lib.rs`](programs/solana_stealth_shield/src/lib.rs)
 - Compiles clean with `anchor build` (anchor-lang 0.30.1, anchor-spl with `token_2022` feature).
 
