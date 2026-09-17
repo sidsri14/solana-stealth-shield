@@ -33,7 +33,7 @@ jobs:
           mkdir -p ~/.config/solana
           echo "$DEPLOY_KEY_B64" | base64 -d > ~/.config/solana/id.json
           chmod 600 ~/.config/solana/id.json
-          solana-keygen verify -f ~/.config/solana/id.json
+          solana-keygen pubkey ~/.config/solana/id.json
 
       - name: Airdrop devnet SOL (with retries)
         run: |
