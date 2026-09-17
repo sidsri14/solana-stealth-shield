@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-- name: Install Solana CLI 4.2.2
+      - name: Install Solana CLI 4.2.2
         run: |
           set -euxo pipefail
           curl -sSfL --retry 5 -o /tmp/solana.tar.bz2 \
